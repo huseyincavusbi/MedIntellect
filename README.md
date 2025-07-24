@@ -4,39 +4,27 @@
 
 > ⚠️ **DISCLAIMER**: This is an educational/research project. Not intended for actual medical diagnosis or treatment. Always consult qualified healthcare professionals for medical advice.
 
+> 📋 **DEMO PROJECT NOTE**: This demonstration was developed using a small medical vector database for proof-of-concept purposes. For answering more complex medical questions, a significantly larger and more comprehensive medical database would be required. This project serves as a foundational demo for local medical AI systems.
+
 ---
 
 ## 🌟 Key Features
 
 - **🏠 100% Local Processing**: Complete privacy with LM Studio integration
-- **🤖## 📁 Project Structure
-
-```
-MedIntellect/
-├── streamlit_app.py              # Main web interface
-├── medical_system.py             # Core orchestration system
-├── generalist_doctor_agent.py    # General medical Q&A agent
-├── guideline_specialist_agent.py # Medical guidelines specialist
-├── research_analyst_agent.py     # Research and analysis agent
-├── build_sample_database.py      # Database builder
-├── setup_check.py                # System verification script
-├── requirements.txt              # Python dependencies
-├── .streamlit/config.toml        # Streamlit configuration
-└── README.md                     # This file
-```rchitecture**: Three specialized medical AI agents working in parallel
+- **🤖 Multi-Agent Architecture**: Three specialized medical AI agents working in parallel
 - **📚 Vector Database**: ChromaDB with 188K+ medical documents for RAG
 - **⚡ Fast Response**: Local inference with no cloud dependencies
 - **💰 Zero API Costs**: No external service fees
 - **🔒 HIPAA-Friendly**: All data remains on your machine
-- **� Interactive Web UI**: Professional Streamlit interface
+- **🌐 Interactive Web UI**: Professional Streamlit interface
 - **🔄 Real-time Updates**: Live consultation tracking and follow-up support
 
 ## 🖥️ System Interface
 
-![MedIntellect Medical Consultation Interface](attachments/medical_consultation_interface.png)
+![MedIntellect Medical Consultation Interface](https://github.com/huseyincavusbi/MedIntellect/blob/main/medical_consultation_interface.png)
 *Medical consultation interface showing user query about brain cancer symptoms*
 
-![MedIntellect Detailed Medical Response](attachments/medical_response_detailed.png)
+![MedIntellect Detailed Medical Response](https://github.com/huseyincavusbi/MedIntellect/blob/main/medical_response_detailed.png)
 *Comprehensive medical response with detailed symptom breakdown and specialist information*
 
 ---
@@ -44,31 +32,51 @@ MedIntellect/
 ## 🏗️ System Architecture
 
 ### Overview
+
+```mermaid
+graph TB
+    A[Streamlit Web Interface] --> B[Medical System Orchestrator]
+    B --> C[LangGraph Router]
+    B --> D[Agent Coordinator]
+    B --> E[Response Synthesizer]
+    
+    F[Generalist Doctor Agent] --> G[ChromaDB Vector Database]
+    H[Guidelines Specialist Agent] --> G
+    I[Research Analyst Agent] --> G
+    
+    C --> F
+    C --> H
+    C --> I
+    
+    G --> J[medical_guidelines<br/>188K+ documents]
+    G --> K[medical_textbooks]
+    
+    L[LM Studio + MedGemma 4B IT MLX<br/>localhost:1234] --> F
+    L --> H
+    L --> I
+    
+    style A fill:#3b82f6,stroke:#1e40af,stroke-width:2px,color:#fff
+    style B fill:#10b981,stroke:#047857,stroke-width:2px,color:#fff
+    style G fill:#f59e0b,stroke:#d97706,stroke-width:2px,color:#fff
+    style L fill:#ef4444,stroke:#dc2626,stroke-width:2px,color:#fff
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                    MedIntellect System                          │
-├─────────────────────────────────────────────────────────────────┤
-│  Streamlit Web Interface (streamlit_app.py)                    │
-├─────────────────────────────────────────────────────────────────┤
-│  Medical System Orchestrator (medical_system.py)               │
-│  ├── LangGraph Router                                          │
-│  ├── Agent Coordinator                                         │
-│  └── Response Synthesizer                                      │
-├─────────────────────────────────────────────────────────────────┤
-│               Three Specialized Medical Agents                  │
-│  ┌───────────────┬──────────────────┬────────────────────────┐  │
-│  │   Generalist  │    Guidelines    │    Research Analyst    │  │
-│  │    Doctor     │   Specialist     │       Agent           │  │
-│  │    Agent      │     Agent        │                       │  │
-│  └───────────────┴──────────────────┴────────────────────────┘  │
-├─────────────────────────────────────────────────────────────────┤
-│                ChromaDB Vector Database                         │
-│  ├── medical_guidelines (188K+ documents)                      │
-│  └── medical_textbooks                                         │
-├─────────────────────────────────────────────────────────────────┤
-│  LM Studio + MedGemma 4B IT MLX (localhost:1234)              │
-└─────────────────────────────────────────────────────────────────┘
-```
+
+### System Architecture Table
+
+| Layer | Component | Description |
+|-------|-----------|-------------|
+| **Interface** | Streamlit Web Interface | User-facing web application (`streamlit_app.py`) |
+| **Orchestration** | Medical System Orchestrator | Core system coordination (`medical_system.py`) |
+| | ├── LangGraph Router | Routes queries to appropriate agents |
+| | ├── Agent Coordinator | Manages multi-agent interactions |
+| | └── Response Synthesizer | Combines agent responses |
+| **Agents** | Generalist Doctor Agent | General medical Q&A and symptom analysis |
+| | Guidelines Specialist Agent | Clinical guidelines and protocols |
+| | Research Analyst Agent | Medical research and evidence synthesis |
+| **Data** | ChromaDB Vector Database | Medical knowledge storage |
+| | ├── medical_guidelines | 188K+ clinical documents |
+| | └── medical_textbooks | Medical textbook content |
+| **Inference** | LM Studio + MedGemma 4B IT MLX | Local AI model serving (localhost:1234) |
 
 ### Component Details
 
@@ -86,7 +94,7 @@ MedIntellect/
    - **Specialization**: Clinical decision support, treatment protocols
    - **Features**: Anti-hallucination prompts, medical precision focus
 
-3. **� Research Analyst Agent** (`research_analyst_agent.py`)
+3. **🔬 Research Analyst Agent** (`research_analyst_agent.py`)
    - **Purpose**: Medical research synthesis, latest studies, PubMed integration
    - **Database**: Multiple collections + PubMed API fallback
    - **Specialization**: Research literature analysis, evidence synthesis
@@ -108,7 +116,7 @@ chroma_db_test/chroma_db/
 - **Chunk Strategy**: 1000 tokens with 150 token overlap
 - **Collections**: Specialized medical knowledge domains
 
-#### **� RAG (Retrieval-Augmented Generation) Flow**
+#### **🔄 RAG (Retrieval-Augmented Generation) Flow**
 
 ```
 User Question → Embedding Generation → Vector Similarity Search
@@ -237,32 +245,17 @@ python setup_check.py
 ## 📁 Project Structure
 
 ```
-MedicalRAG/
-├── Core System Files
-│   ├── streamlit_app.py              # Main web interface
-│   ├── medical_system.py             # Multi-agent orchestrator
-│   ├── generalist_doctor_agent.py    # General medical Q&A agent
-│   ├── guideline_specialist_agent.py # Clinical guidelines agent
-│   └── research_analyst_agent.py     # Medical research agent
-│
-├── Database & Setup
-│   ├── build_sample_database.py      # Sample database creator
-│   ├── setup_check.py                # System verification script
-│   ├── chroma_db_test/               # Main vector database (188K+ docs)
-│   └── DATABASE_SETUP.md             # Database configuration guide
-│
-├── Configuration
-│   ├── requirements.txt              # Python dependencies
-│   ├── .streamlit/config.toml        # Streamlit configuration
-│   └── packages.txt                  # System packages
-│
-├── Documentation
-│   ├── README.md                     # This file
-│   └── DATABASE_SETUP.md             # Database setup guide
-│
-└── Development Tools
-    ├── chromadb-data-ingestion.ipynb # Database ingestion notebook
-    └── setup_check.py               # System verification script
+MedIntellect/
+├── streamlit_app.py              # Main web interface
+├── medical_system.py             # Core orchestration system
+├── generalist_doctor_agent.py    # General medical Q&A agent
+├── guideline_specialist_agent.py # Medical guidelines specialist
+├── research_analyst_agent.py     # Research and analysis agent
+├── build_sample_database.py      # Database builder
+├── setup_check.py                # System verification script
+├── requirements.txt              # Python dependencies
+├── .streamlit/config.toml        # Streamlit configuration
+└── README.md                     # This file
 ```
 
 ---
@@ -331,6 +324,21 @@ Agent Coordination:
 4. Synthesis → Comprehensive response
 ```
 
+### **General Medical Questions:**
+- "What are the symptoms of diabetes?"
+- "How is hypertension treated?"
+- "What are the side effects of chemotherapy?"
+
+### **Clinical Guidelines:**
+- "What are the latest breast cancer screening guidelines?"
+- "How should acute myocardial infarction be treated?"
+- "What are the contraindications for ACE inhibitors?"
+
+### **Research & Studies:**
+- "What is the latest research on COVID-19 treatments?"
+- "Are there new developments in Alzheimer's disease?"
+- "What vaccines are recommended for adults?"
+
 ---
 
 ## 🛠️ Troubleshooting
@@ -365,6 +373,15 @@ Solution:
 3. Check Python version (3.8+ required)
 ```
 
+#### **"Empty collections"**
+- Run: `python build_sample_database.py`
+- Check `chroma_db_sample/` exists
+
+#### **Slow responses**
+- Check LM Studio model is fully loaded
+- Reduce temperature setting
+- Ensure adequate RAM available
+
 ### **Performance Optimization**
 
 #### **For Better Response Times**
@@ -393,6 +410,13 @@ Solution:
 - **Audit Trail**: All queries logged locally
 - **Access Control**: Single-user local deployment
 
+### **Additional Security Features**
+- ✅ **100% Local Processing**: All data stays on your machine
+- 🔒 **No Data Collection**: No information sent to external servers
+- 🛡️ **HIPAA-Friendly**: Suitable for privacy-sensitive environments
+- 💾 **Local Storage**: All databases and responses stored locally
+- 🚫 **No Internet Required**: Works completely offline (after setup)
+
 ---
 
 ## 🤝 Contributing
@@ -412,9 +436,23 @@ This is an educational project. For improvements:
 
 ---
 
-## � License
+## 📄 License
 
 This project is for educational and research purposes. Please ensure compliance with local regulations when using medical AI systems.
+
+---
+
+## ⚠️ Medical Disclaimer
+
+**IMPORTANT MEDICAL DISCLAIMER:**
+
+This system is designed for educational and research purposes only. It is **NOT** intended to:
+- Provide medical diagnosis
+- Replace professional medical advice
+- Serve as a substitute for consultation with qualified healthcare providers
+- Make treatment recommendations
+
+**Always consult with qualified healthcare professionals for medical advice, diagnosis, and treatment.**
 
 ---
 
@@ -430,108 +468,6 @@ This project is for educational and research purposes. Please ensure compliance 
 ---
 
 **⚡ Ready to start your private medical consultation system? Follow the Quick Start Guide above!**
-
-### Local Processing Flow
-```
-Streamlit UI → Medical System → LM Studio (localhost:1234)
-                     ↓
-    [Generalist] [Guidelines] [Research] ← ChromaDB Vector Store
-                     ↓
-              Response Synthesis
-```
-
-## � Project Structure
-
-```
-MedicalRAG/
-├── streamlit_app.py              # Main web interface
-├── medical_system.py             # Core orchestration system
-├── generalist_doctor_agent.py    # General medical Q&A agent
-├── guideline_specialist_agent.py # Medical guidelines specialist
-├── research_analyst_agent.py     # Research and analysis agent
-├── build_sample_database.py      # Database builder
-├── chroma_db_sample/            # Pre-built medical database (11 documents)
-├── requirements.txt             # Python dependencies
-└── README.md                    # This file
-```
-
-## 💡 Usage Examples
-
-### **General Medical Questions:**
-- "What are the symptoms of diabetes?"
-- "How is hypertension treated?"
-- "What are the side effects of chemotherapy?"
-
-### **Clinical Guidelines:**
-- "What are the latest breast cancer screening guidelines?"
-- "How should acute myocardial infarction be treated?"
-- "What are the contraindications for ACE inhibitors?"
-
-### **Research & Studies:**
-- "What is the latest research on COVID-19 treatments?"
-- "Are there new developments in Alzheimer's disease?"
-- "What vaccines are recommended for adults?"
-
-## � Configuration
-
-### **LM Studio Settings:**
-- **Model**: MedGemma 4B IT MLX
-- **Port**: 1234 (default)
-- **API**: OpenAI-compatible
-- **Temperature**: 0.1 (for medical accuracy)
-- **Max Tokens**: 600
-
-### **Database Options:**
-The system automatically detects and uses available databases:
-1. `./chroma_db_sample` (included - 11 medical documents)
-2. `./chroma_db_test` (if available)
-3. `./chroma_db` (if available)
-
-## �️ Troubleshooting
-
-### **Common Issues:**
-
-1. **"Connection error"**
-   - Ensure LM Studio is running
-   - Check model is loaded
-   - Verify port 1234 is accessible
-
-2. **"Empty collections"**
-   - Run: `python build_sample_database.py`
-   - Check `chroma_db_sample/` exists
-
-3. **Import errors**
-   - Run: `pip install -r requirements.txt`
-   - Ensure Python 3.8+ is used
-
-4. **Slow responses**
-   - Check LM Studio model is fully loaded
-   - Reduce temperature setting
-   - Ensure adequate RAM available
-
-## 🔐 Privacy & Security
-
-- ✅ **100% Local Processing**: All data stays on your machine
-- 🔒 **No Data Collection**: No information sent to external servers
-- 🛡️ **HIPAA-Friendly**: Suitable for privacy-sensitive environments
-- 💾 **Local Storage**: All databases and responses stored locally
-- 🚫 **No Internet Required**: Works completely offline (after setup)
-
-## 📄 License
-
-This project is designed for research and educational use. Please ensure compliance with medical AI regulations in your jurisdiction.
-
-## ⚠️ Medical Disclaimer
-
-**IMPORTANT MEDICAL DISCLAIMER:**
-
-This system is designed for educational and research purposes only. It is **NOT** intended to:
-- Provide medical diagnosis
-- Replace professional medical advice
-- Serve as a substitute for consultation with qualified healthcare providers
-- Make treatment recommendations
-
-**Always consult with qualified healthcare professionals for medical advice, diagnosis, and treatment.**
 
 ---
 
